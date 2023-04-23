@@ -73,6 +73,7 @@ fn test_compute_overflow() {
 #[test]
 // Wasm doesn't support threads
 fn test_multithreaded_compute() {
+    env_logger::init();
     initialize_test(
         TestParameters::default()
             .downlevel_flags(wgpu::DownlevelFlags::COMPUTE_SHADERS)
@@ -85,7 +86,7 @@ fn test_multithreaded_compute() {
 
             let ctx = Arc::new(ctx);
 
-            let thread_count = 8;
+            let thread_count = 100;
 
             let (tx, rx) = mpsc::channel();
             for _ in 0..thread_count {
@@ -129,7 +130,7 @@ fn test_multithreaded_compute() {
                 });
             }
             for _ in 0..thread_count {
-                rx.recv_timeout(Duration::from_secs(10))
+                rx.recv_timeout(Duration::from_secs(1000))
                     .expect("A thread never completed.");
             }
         },
