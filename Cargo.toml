@@ -150,3 +150,6 @@ wgpu-types = { path = "./wgpu-types" }
 #web-sys = { path = "../wasm-bindgen/crates/web-sys" }
 #js-sys = { path = "../wasm-bindgen/crates/js-sys" }
 #wasm-bindgen = { path = "../wasm-bindgen" }
+
+[profile.test]
+debug-assertions = false
