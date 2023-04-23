@@ -53,7 +53,7 @@ required-features = ["gles"]
 
 [dependencies]
 bitflags = "2"
-parking_lot = ">=0.11,<0.13"
+parking_lot = { version  = ">=0.11,<0.13", features=["deadlock_detection"]}
 profiling = { version = "1", default-features = false }
 raw-window-handle = "0.5"
 thiserror = "1"

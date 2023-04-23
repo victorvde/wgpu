@@ -103,6 +103,31 @@ fn test_multithreaded_compute() {
                 });
             }
 
+            { // only for #[cfg]
+                use std::thread;
+                use std::time::Duration;
+                use parking_lot::deadlock;
+
+                // Create a background thread which checks for deadlocks every 10s
+                thread::spawn(move || {
+                    loop {
+                        thread::sleep(Duration::from_secs(1));
+                        let deadlocks = deadlock::check_deadlock();
+                        if deadlocks.is_empty() {
+                            continue;
+                        }
+
+                        println!("{} deadlocks detected", deadlocks.len());
+                        for (i, threads) in deadlocks.iter().enumerate() {
+                            println!("Deadlock #{}", i);
+                            for t in threads {
+                                println!("Thread Id {:#?}", t.thread_id());
+                                println!("{:#?}", t.backtrace());
+                            }
+                        }
+                    }
+                });
+            }
             for _ in 0..thread_count {
                 rx.recv_timeout(Duration::from_secs(10))
                     .expect("A thread never completed.");
